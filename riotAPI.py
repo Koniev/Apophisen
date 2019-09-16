@@ -5,6 +5,7 @@ Do not forget to pip install RiotWatcher before anything
 """
 import datetime
 import time
+import sys
 from riotwatcher import RiotWatcher, ApiError
 """
 Put your API key here, it is mine (Koniev)
@@ -105,7 +106,15 @@ def getTotalKillsAndCreation(gameId):
     totalKills = sum(participantKills)
     return totalKills, gameCreation
 
-sumId = getSummonerId(my_region, my_queue, tierList[0], divisionList[0], 1)
-accId = getAccountId(sumId[0])
-gamesId = getGamesId(accId)
-print(getTotalKillsAndCreation(gamesId[0]))
+for t in tierList:
+    for d in divisionList:
+        for p in range(1,10):
+            sumId = getSummonerId(my_region, my_queue, t, d, p)
+            for sId in sumId:
+                accId = getAccountId(sId)
+                gamesId = getGamesId(accId)
+                for gId in gamesId:
+                    total = getTotalKillsAndCreation(gId)
+                    with open(sys.path[0] + "\\dataAPIriot.txt", "a") as myfile:
+                        myfile.write(str(total[0]) + "," + total[1] + "\n")
+
