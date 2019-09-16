@@ -28,7 +28,7 @@ except ApiError as err:
     else:
         raise
 """
-Since we know have summoner info, we want entries for the dict, then we will use it to get the sumId
+Since we now have summoner info, we want entries for the dict, then we will use it to get the sumId
 """
 data = challengers.get('entries')
 sumId = []
@@ -43,5 +43,5 @@ matches = watcher.match.matchlist_by_account(my_region, accId.get('accountId'))
 print(matches.get('matches')[0])
 
 """
-Since we know have the match history, it is possible to get the number of kills/game
+Since we now have the match history, it is possible to get the number of kills/game
 """
