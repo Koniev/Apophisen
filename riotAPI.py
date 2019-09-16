@@ -28,11 +28,10 @@ except ApiError as err:
     else:
         raise
 """
-Since we now have summoner info, we want entries for the dict, then we will use it to get the sumId
+Since we know have summoner info, we want entries for the dict, then we will use it to get the sumId
 """
 data = challengers.get('entries')
 sumId = []
-matches = []
 for item in data:
     sumId.append(item.get('summonerId'))
 """
@@ -40,8 +39,17 @@ Here it is an example, but we need to ask the accountId for every summonerId to 
 """
 accId = watcher.summoner.by_id(my_region, sumId[0])
 matches = watcher.match.matchlist_by_account(my_region, accId.get('accountId'))
-print(matches.get('matches')[0])
-
+gameId = [i.get('gameId') for i in matches.get('matches')]
 """
 Since we now have the match history, it is possible to get the number of kills/game
 """
+infos = watcher.match.by_id(my_region, gameId[0])
+participantInfos = [i.get('stats') for i in infos.get('participants')]
+participantKills = [item.get('kills') for item in participantInfos]
+"""
+The total kill is the sum of every kill of every participant of the game
+"""
+totalKills = sum(participantKills)
+print(totalKills)
+
+
