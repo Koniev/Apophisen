@@ -31,9 +31,11 @@ def getPlayerData(region, summonerName, queueNumber):
             key = champInfos.get(c).get('key')
             if key not in champs.keys():
                 champs[key] = champInfos.get(c).get('name')
+        # TO DELETE : dump champion references just to check if it is working correctly
         with open("champRef.json", "w") as r:
              r.write(json.dumps(champs))
-        with open("data.json","w") as f:
+        # Store data in data-SummonerName.json
+        with open("data-" + summonerName + ".json","w") as f:
             matches = history.get('matches')
             for item in matches:
                 item['champion']=champs.get(str(item['champion'])) if champs.get(str(item['champion'])) != None else item['champion']
@@ -48,4 +50,6 @@ def getPlayerData(region, summonerName, queueNumber):
         else:
             raise
             
-getPlayerData(my_region, my_name, my_queue)
+getPlayerData(my_region, 'Koniev', my_queue)
+#getPlayerData(my_region, 'Neekoptère', my_queue)
+#getPlayerData(my_region, 'PieraptorR', my_queue)
