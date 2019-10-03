@@ -29,9 +29,15 @@ def getGameData(region, gameId):
             if key not in champs.keys():
                 champs[key] = champInfos.get(c).get('name')
         # Store data in data-SummonerName.json
+        playerDict = {}
+        for player in game['participantIdentities']:
+            key = player['participantId']
+            if key not in playerDict.keys():
+                playerDict[key] = player['player'].get('summonerName')
         with open("gameData-" + gameId + ".json","w") as f:
             for item in game['participants']:
                 item['championId'] = champs.get(str(item['championId'])) if champs.get(str(item['championId'])) != None else item['championId']
+                item['participantId'] = playerDict.get(item['participantId'])
             f.write(json.dumps(game))
     except ApiError as err:
         if err.response.status_code == 429:
