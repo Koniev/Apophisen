@@ -12,7 +12,7 @@ import json
 
 watcher = RiotWatcher('RGAPI-22522138-52b3-419f-84ac-bc8e1146c813')
 my_region = 'euw1'
-
+my_queue = 420 # 'RANKED_SOLO_5x5'
 
 class Player:
     Lane = ""
@@ -35,6 +35,14 @@ class Player:
         for name, value in vars(self).items():
             string += name + ": " + str(value) + "\n"
         return string
+    
+def GetPlayerLastMatch(region, queueNumber, playerName):
+    # Get summoner Id
+    player = watcher.summoner.by_name(region, playerName)
+    # Then get history based on this Id
+    history = watcher.match.matchlist_by_account(region, player.get('accountId'), queueNumber)
+    return history.get('matches')[0]
+    
 def getGameData(region, gameId):
     try:
         # Get game details
@@ -72,5 +80,6 @@ def getGameData(region, gameId):
             print('Summoner with that ridiculous name not found.')
         else:
             raise
-            
-getGameData(my_region, '4211509827')
+        
+playerLastMatch = GetPlayerLastMatch(my_region, my_queue, "Koniev")
+getGameData(my_region, str(playerLastMatch['gameId']))
