@@ -13,7 +13,7 @@ Put your API key here, it is mine (Koniev)
 
 tierList = ['DIAMOND', 'PLATINUM', 'GOLD', 'SILVER', 'BRONZE', 'IRON']
 divisionList = ['I', 'II', 'III', 'IV']
-watcher = RiotWatcher('RGAPI-be037780-90a0-4fa5-b182-69976e7e7b1f')
+watcher = RiotWatcher('RGAPI-66ac386a-572c-44bc-8185-029275086fec')
 
 my_region = 'euw1'
 my_queue = 'RANKED_SOLO_5x5'
@@ -106,11 +106,17 @@ def getTotalKillsAndCreation(gameId):
     totalKills = sum(participantKills)
     return totalKills, gameCreation
 
+
+#%% Main
 for t in tierList:
+    print(t)
     for d in divisionList:
+        print(d)
         for p in range(1,10):
+            print(p)
             sumId = getSummonerId(my_region, my_queue, t, d, p)
             for sId in sumId:
+                print(sId)
                 accId = getAccountId(sId)
                 gamesId = getGamesId(accId)
                 for gId in gamesId:

@@ -9,7 +9,7 @@ from riotwatcher import RiotWatcher, ApiError
 import json
         
 
-watcher = RiotWatcher('RGAPI-e64d043b-400e-42a2-8a3a-07e387e18ac9')
+watcher = RiotWatcher('RGAPI-66ac386a-572c-44bc-8185-029275086fec')
 my_region = 'euw1'
 my_name = 'Koniev'
 my_queue = 420 # 'RANKED_SOLO_5x5'

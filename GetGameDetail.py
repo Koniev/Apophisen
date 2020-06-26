@@ -10,7 +10,7 @@ from riotwatcher import RiotWatcher, ApiError
 import json
         
 
-watcher = RiotWatcher('RGAPI-22522138-52b3-419f-84ac-bc8e1146c813')
+watcher = RiotWatcher('RGAPI-66ac386a-572c-44bc-8185-029275086fec')
 my_region = 'euw1'
 my_queue = 420 # 'RANKED_SOLO_5x5'
 
@@ -21,7 +21,23 @@ class Player:
     Deaths = 0
     Assists = 0
     Damages = 0
-    def __init__(self, name, team, champion=None, lane=None,  kills=None, deaths=None, assists=None, damages=None):
+    VisionScore = 0
+    VisionWards = 0
+    WardsKilled = 0
+    WardsPlaced = 0
+    GoldEarned = 0
+    def __init__(self, name, team, 
+                 champion=None, 
+                 lane=None,  
+                 kills=None, 
+                 deaths=None, 
+                 assists=None, 
+                 damages=None,
+                 visionScore=None,
+                 visionWards=None,
+                 wardsKilled=None,
+                 wardsPlaced=None,
+                 goldEarned=None):
         self.name = name
         self.Team = team
         self.Lane = lane
@@ -30,18 +46,23 @@ class Player:
         self.Deaths = deaths
         self.Assists = assists
         self.Damages = damages
+        self.VisionScore = visionScore
+        self.VisionWards = visionWards
+        self.WardsKilled = wardsKilled
+        self.WardsPlaced = wardsPlaced
+        self.GoldEarned = goldEarned
     def __str__(self):
         string = ""
         for name, value in vars(self).items():
             string += name + ": " + str(value) + "\n"
         return string
     
-def GetPlayerLastMatch(region, queueNumber, playerName):
+def GetPlayerMatches(region, queueNumber, playerName):
     # Get summoner Id
     player = watcher.summoner.by_name(region, playerName)
     # Then get history based on this Id
     history = watcher.match.matchlist_by_account(region, player.get('accountId'), queueNumber)
-    return history.get('matches')[0]
+    return history.get('matches')
     
 def getGameData(region, gameId):
     try:
@@ -69,7 +90,18 @@ def getGameData(region, gameId):
                 item['championId'] = champs.get(str(item['championId'])) if champs.get(str(item['championId'])) != None else item['championId']
                 item['participantId'] = playerDict.get(item['participantId'])
                 stats = item['stats']
-                listOfPlayers.append(Player(item['participantId'], item['teamId'],item['championId'],"BOTTOM", stats['kills'], stats['deaths'], stats['assists'], stats['totalDamageDealtToChampions']))               
+                listOfPlayers.append(Player(item['participantId'], 
+                                            item['teamId'],item['championId'],
+                                            stats['kills'], 
+                                            stats['deaths'], 
+                                            stats['assists'], 
+                                            stats['totalDamageDealtToChampions'],
+                                            stats['visionScore'],
+                                            stats['visionWardsBoughtInGame'],
+                                            stats['wardsKilled'],
+                                            stats['wardsPlaced'],
+                                            stats['goldEarned']
+                                            ))               
             f.write(json.dumps([player.__dict__ for player in listOfPlayers]))
     except ApiError as err:
         if err.response.status_code == 429:
@@ -80,6 +112,8 @@ def getGameData(region, gameId):
             print('Summoner with that ridiculous name not found.')
         else:
             raise
-        
-playerLastMatch = GetPlayerLastMatch(my_region, my_queue, "Koniev")
-getGameData(my_region, str(playerLastMatch['gameId']))
+#%%        
+
+matches = GetPlayerMatches(my_region, my_queue, "Koniev")
+for match in matches:
+    getGameData(my_region, str(match['gameId']))
