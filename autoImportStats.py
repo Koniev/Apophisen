@@ -45,7 +45,9 @@ def getSummonersData():
     winSoloQ = []
     loseSoloQ = []
 
-    driver = webdriver.Chrome()
+    options = webdriver.chrome.options.Options()
+    options.add_argument('--headless')
+    driver = webdriver.Chrome(options=options)
     
     for name in summonerNames:
         url = "https://www.op.gg/summoners/euw/" + name
