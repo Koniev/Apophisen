@@ -2,10 +2,11 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+
 import time
 
 
-def main():
+def getStatsUpdateSheet(summonerNames):
     #init google sheet
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
     SERVICE_ACCOUNT_FILE = 'keys.json'
@@ -16,7 +17,7 @@ def main():
     sheet = service.spreadsheets()
 
     #retrieve data from web op.gg
-    winSoloQ,loseSoloQ = getSummonersData()
+    winSoloQ,loseSoloQ = _getSummonersData(summonerNames)
 
     #write in sheet
     value = []
@@ -39,9 +40,8 @@ def main():
     valueInputOption="USER_ENTERED",body = {"values": value}).execute()
 
 #retrieve data from web op.gg
-def getSummonersData():
+def _getSummonersData(summonerNames):
     winLoseSoloQ = []
-    summonerNames = ["APO Boby","Morvatch","Dreadless","LA MERE A WAKZ","PtitHeri"]
     winSoloQ = []
     loseSoloQ = []
 
@@ -63,7 +63,5 @@ def getSummonersData():
     print(loseSoloQ)
 
     return winSoloQ,loseSoloQ
-
-main()
 
 
