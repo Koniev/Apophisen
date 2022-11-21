@@ -21,22 +21,24 @@ def main():
     #write in sheet
     value = []
 
-    for i in range(3):
+    for i in range(5):
         value.append([winSoloQ[i],loseSoloQ[i]])
-
-    print(value)
-
-    sheet.values().update(spreadsheetId = SAMPLE_SPREADSHEET_ID, range = "PRE SAISON!C24",
-    valueInputOption="USER_ENTERED",body = {"values": value}).execute()
+        print(i)
+        print(value)
+        string = "PRE SAISON!C" + str(24+2*i)
+        sheet.values().update(spreadsheetId = SAMPLE_SPREADSHEET_ID, range = string,
+        valueInputOption="USER_ENTERED",body = {"values": value}).execute()
+        value = []
     
+    """
     value = []
-    for i in range(4,5):
+    for i in range(2,4):
+        print(i)
         value.append([winSoloQ[i],loseSoloQ[i]])
-
-    print(value)
     
     sheet.values().update(spreadsheetId = SAMPLE_SPREADSHEET_ID, range = "PRE SAISON!C32",
     valueInputOption="USER_ENTERED",body = {"values": value}).execute()
+    """
 
 #retrieve data from web op.gg
 def getSummonersData():
@@ -53,8 +55,8 @@ def getSummonersData():
         winLose = driver.find_element(By.XPATH,'//*[@id="content-container"]/div[1]/div[1]/div[2]/div[3]/div[1]').text
         winLoseSoloQ.append(winLose)
 
-    winSoloQ = list(map(lambda x: x[0], winLoseSoloQ))
-    loseSoloQ = list(map(lambda x: x[3], winLoseSoloQ))
+    winSoloQ = list(map(lambda x: x.split()[0][:-1], winLoseSoloQ))
+    loseSoloQ = list(map(lambda x: x.split()[1][:-1], winLoseSoloQ))
 
     print(winLoseSoloQ)
     print(winSoloQ)
